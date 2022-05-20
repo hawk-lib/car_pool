@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "578097583752",
+    "project_id": "car-pool-87f77",
+    "storage_bucket": "car-pool-87f77.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:578097583752:android:06e4b2a0eb9225f957713d",
+        "android_client_info": {
+          "package_name": "com.whawk.car_pool"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "578097583752-6510m0lhd2n8v25d6reut1l9746q7brs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEpIjggNhgPNOPPAT5n5Aw478aSN-zDTQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "578097583752-6510m0lhd2n8v25d6reut1l9746q7brs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

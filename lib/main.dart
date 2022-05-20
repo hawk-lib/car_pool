@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+
       routes: {
         "/": (context) => const SplashScreen(),
         "/authenticationRoute": (context) => const AuthenticationScreen(),

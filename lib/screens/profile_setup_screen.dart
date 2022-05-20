@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class ProfileSetupScreen extends StatelessWidget {
   const ProfileSetupScreen({Key? key}) : super(key: key);
@@ -8,7 +9,13 @@ class ProfileSetupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    throw UnimplementedError();
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("hello"),
+        ),
+      ),
+    );
   }
 
 }
