@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'home_screen.dart';
+
 
 class ProfileSetupScreen extends StatefulWidget {
   const ProfileSetupScreen({Key? key}) : super(key: key);
@@ -12,9 +14,13 @@ class ProfileSetupScreen extends StatefulWidget {
 
 class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   final TextEditingController _phoneNumber = TextEditingController();
+  final TextEditingController _otp = TextEditingController();
+
   String email = "";
   String photoUrl = "https://lh3.googleusercontent.com/a/AATXAJx0D6NV1PCZ9r_U6yWNLWWVd2vALY2PfVKuuu8J=s96-c";
   String displayName = "";
+  late String mVerificationId;
+
 
 
 
@@ -76,14 +82,15 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
 
                     ),
-                    ElevatedButton (onPressed: () {
-
-                      sendOtp();
+                    ElevatedButton (onPressed: () async {
+                      String phoneNumber = "+91${_phoneNumber.text}";
+                      await sendOtp(phoneNumber);
 
 
                     }, child: Text("Submit")),
 
                     TextFormField(
+                      controller: _otp,
                         decoration: const InputDecoration(
                             hintText: "OTP",
                             prefix: Padding(padding: EdgeInsets.all(5),
@@ -94,10 +101,15 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
 
                     ),
-                    ElevatedButton(onPressed: () {
+                    ElevatedButton(onPressed: () async{
+                      
+                      await FirebaseAuth.instance.currentUser?.linkWithCredential(PhoneAuthProvider.credential(verificationId: mVerificationId, smsCode: _otp.text));
+                      SharedPreferences preferences = await SharedPreferences.getInstance();
+                      preferences.setString("mobile_number", "+91${_phoneNumber.text}");
                       print("successful");
                       Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => ProfileSetupScreen()));
+                          builder: (context) => HomeScreen()));
+
                     }, child: Text("Verify")),
                   ]
               ),
@@ -112,12 +124,20 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     );
   }
 
-  void sendOtp() async{
+  Future<void> sendOtp(String phoneNumber) async{
     await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: "$_phoneNumber",
-        verificationCompleted: (PhoneAuthCredential credential) {},
+        phoneNumber: phoneNumber,
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          setState(() {
+            _otp.text = credential.smsCode!;
+          });
+          await FirebaseAuth.instance.currentUser?.linkWithCredential(credential);
+        },
     verificationFailed: (FirebaseAuthException e) {},
     codeSent: (String verificationId, int? resendToken) {
+          setState(() {
+            mVerificationId = verificationId;
+          });
           print("sent");
     },
     codeAutoRetrievalTimeout: (String verificationId) {}

@@ -21,7 +21,6 @@ class AuthenticationScreen extends StatefulWidget {
 }
 
 class _AuthenticationScreenState extends State<AuthenticationScreen> {
-  final TextEditingController _phoneNumber = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +28,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
     return MaterialApp(
       home: Scaffold(
         body: Center(
-            child: Obx(() {
-              return buildLoginButton();
-            })
-
-
+            child:  buildLoginButton()
         )
         ,
 
@@ -53,16 +48,10 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
         foregroundColor: Colors.black);
   }
   login() async{
-    String displayName = "";
-    String email="";
-    String photoUrl="";
     GoogleSignInAccount result;
-    GoogleSignIn _googleSignIn = GoogleSignIn();
+    GoogleSignIn googleSignIn = GoogleSignIn();
     try{
-      result = (await _googleSignIn.signIn())!;
-      if(result==null){
-        return 1;
-      }
+      result = (await googleSignIn.signIn())!;
       final userData = await result.authentication;
       final credential = GoogleAuthProvider.credential(
           accessToken: userData.accessToken, idToken: userData.idToken
@@ -70,35 +59,36 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
       FirebaseAuth mAuth = FirebaseAuth.instance;
       await mAuth.signInWithCredential(credential);
       String userId = mAuth.currentUser!.uid;
+      String? phoneNumber = mAuth.currentUser!.phoneNumber;
 
-      FirebaseDatabase db = FirebaseDatabase.instance;
-      DatabaseReference ref = db.ref("users").child(userId);
-      displayName = result.displayName!;
-      email = result.email;
-      photoUrl = result.photoUrl!;
+      /*FirebaseDatabase db = FirebaseDatabase.instance;
+      DatabaseReference ref = db.ref("users").child(userId);*/
+
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('email', email);
-      prefs.setString('photoUrl', photoUrl);
-      prefs.setString('displayName', displayName);
+      prefs.setString('email', result.email);
+      prefs.setString('photoUrl', result.photoUrl!);
+      prefs.setString('displayName', result.displayName!);
       prefs.setString('uid', userId);
+      if(phoneNumber != null){
+        prefs.setString('mobile_number', phoneNumber);
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+      }else{
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileSetupScreen()));
+      }
 
 
-
+/*
       final snapshot = await ref.child('users/$userId').get();
       if (snapshot.exists) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
         print(snapshot.value);
         return 3;
       } else {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileSetupScreen()));
         print('No data available.');
         return 2;
-      }
+      }*/
 
     }catch (error){
       print(error);
     }
-
-    return false;
   }
 }

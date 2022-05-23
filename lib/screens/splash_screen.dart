@@ -17,12 +17,15 @@ class SplashScreen extends StatefulWidget {
 }
 class SplashScreenState extends State<SplashScreen> {
 
-  late SharedPreferences preferences;
 
   @override
-  void initState() {
-    super.initState();
+  void initState(){
     init();
+    super.initState();
+  }
+
+  init() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
     if(FirebaseAuth.instance.currentUser!=null){
       if(preferences.containsKey("mobile_number")){
         Timer(const Duration(seconds: 2),
@@ -43,7 +46,8 @@ class SplashScreenState extends State<SplashScreen> {
       }
     }else{
       if(preferences.containsKey("email")) {
-        logout();
+        await GoogleSignIn().signOut();
+        preferences.clear();
       }
       Timer(const Duration(seconds: 2),
               ()=>Navigator.pushReplacement(context,
@@ -53,15 +57,7 @@ class SplashScreenState extends State<SplashScreen> {
           )
       );
     }
-  }
 
-  init() async {
-    preferences = await SharedPreferences.getInstance();
-  }
-
-  logout() async {
-    await GoogleSignIn().signOut();
-    preferences.clear();
   }
 
   @override
