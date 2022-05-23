@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class TravelHistoryScreen extends StatelessWidget {
   const TravelHistoryScreen({Key? key}) : super(key: key);
@@ -8,7 +9,11 @@ class TravelHistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    throw UnimplementedError();
+    return MaterialApp(
+      home: Container(
+        child: const Text("hello"),
+      ),
+    );
   }
 
 }

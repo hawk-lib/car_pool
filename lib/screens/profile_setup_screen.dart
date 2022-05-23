@@ -1,10 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../utility/login_controller.dart';
 
 class ProfileSetupScreen extends StatefulWidget {
   const ProfileSetupScreen({Key? key}) : super(key: key);
@@ -14,8 +11,32 @@ class ProfileSetupScreen extends StatefulWidget {
 }
 
 class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
-  final controler = Get.put(LoginController());
-final TextEditingController _phoneNumber = TextEditingController();
+  final TextEditingController _phoneNumber = TextEditingController();
+  String email = "";
+  String photoUrl = "https://lh3.googleusercontent.com/a/AATXAJx0D6NV1PCZ9r_U6yWNLWWVd2vALY2PfVKuuu8J=s96-c";
+  String displayName = "";
+
+
+
+  Future<SharedPreferences> getData() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs;
+  }
+
+  @override
+  void initState() {
+    getData().then((prefs) {
+      setState(() {
+        email = prefs.getString("email")!;
+        photoUrl = prefs.getString("photoUrl")!;
+        displayName = prefs.getString("displayName")!;
+      });
+    });
+
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,16 +47,16 @@ final TextEditingController _phoneNumber = TextEditingController();
             const SizedBox(height: 30),
             CircleAvatar(
               backgroundImage: Image
-                  .network(controler.googleAccount.value?.photoUrl ?? '')
+                  .network(photoUrl)
                   .image,
               radius: 50,
             ),
-            Text(controler.googleAccount.value?.displayName ?? '',
+            Text(displayName,
               style: const TextStyle(color: Colors.black,
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                   wordSpacing: 3),),
-            Text(controler.googleAccount.value?.email ?? ''),
+            Text(email),
             const SizedBox(height: 20),
             const Text("enter the mob number"),
             Container(
