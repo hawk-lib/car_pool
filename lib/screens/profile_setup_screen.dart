@@ -1,7 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'home_screen.dart';
 
 
@@ -107,6 +107,12 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                       SharedPreferences preferences = await SharedPreferences.getInstance();
                       preferences.setString("mobile_number", "+91${_phoneNumber.text}");
                       print("successful");
+                      Map <String, dynamic> data={
+                        "Mobile Number": preferences.getString("mobile_number"),
+                        "Name": preferences.getString("displayName"),
+                        "Email": preferences.getString("email"),
+                      };
+                      FirebaseFirestore.instance.collection("User_Data").doc(preferences.getString("uid")).set(data);
                       Navigator.push(context, MaterialPageRoute(
                           builder: (context) => HomeScreen()));
 

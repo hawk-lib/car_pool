@@ -38,14 +38,14 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
   }
 
   FloatingActionButton buildLoginButton() {
-
     return FloatingActionButton.extended(onPressed: () {
       login();
-
     },
+        icon: Image.asset('assets/icons'),
         label: const Text("google sign in"),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black);
+
   }
   login() async{
     GoogleSignInAccount result;
