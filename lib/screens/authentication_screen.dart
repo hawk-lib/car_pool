@@ -41,7 +41,10 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
     return FloatingActionButton.extended(onPressed: () {
       login();
     },
-        icon: Image.asset('assets/icons'),
+        icon: Image.asset("assets/icons/google.png",
+          height: 32,
+          width: 32,
+        ),
         label: const Text("google sign in"),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black);

@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'authentication_screen.dart';
 import 'home_screen.dart';
 
@@ -63,8 +62,8 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.yellow,
-        child:FlutterLogo(size:MediaQuery.of(context).size.height)
+        color: Colors.white,
+        child:Image.asset("assets/icons/google.png",height: 100,width: 100,)
     );
   }
 }

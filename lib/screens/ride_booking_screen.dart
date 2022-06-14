@@ -14,7 +14,7 @@ class _RideBookScreenState extends State<RideBookScreen> {
 
   TextEditingController dateCtl = TextEditingController();
   TextEditingController startSearch = TextEditingController();
-  TextEditingController endSearch = TextEditingController();
+  TextEditingController totalSeatBook = TextEditingController();
   bool changeButton=false;
 
 
@@ -25,107 +25,178 @@ class _RideBookScreenState extends State<RideBookScreen> {
 
   Widget build(BuildContext context) {
     return Material(
-      child: SingleChildScrollView(
-        child: Form(child: Column(
-          children:  [
-            const SizedBox(height: 50,),
-            const Text('Book Your Ride',style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold,color: Colors.blueAccent),),
-             const SizedBox(
-              height: 20.0,
-            ),
-    Padding(
-    padding:  const EdgeInsets.symmetric(vertical:16.0, horizontal: 32.0),
-    child: Column(children: [
-      TextFormField(
-        controller: dateCtl,
-        decoration: const InputDecoration(
-          labelText: "Date of birth",
-          hintText: "Ex. Insert your dob",),
-        onTap: () async{
-          DateTime ? date = DateTime(1900);
-          FocusScope.of(context).requestFocus(FocusNode());
-          date = await showDatePicker(
-              context: context,
-              initialDate:DateTime.now(),
-              firstDate:DateTime(1900),
-              lastDate: DateTime(2100));
-
-          dateCtl.text = date.toString();
-          },
-      ),
-      TextFormField(
-        controller: startSearch,
-        keyboardType: TextInputType.text,
-        decoration: const InputDecoration(
-          labelText: "From",
-
-        ),
-        validator: (value){
-          if(value==null || value.isEmpty){
-            return "EndingPoint is not empty";
-          }
-          return null;
-        },
-
-      ),
-      TextFormField(
-        controller: endSearch,
-        keyboardType: TextInputType.text,
-        decoration: const InputDecoration(
-          labelText: "Destination",
-
-        ),
-        validator: (value){
-          if(value==null || value.isEmpty){
-            return "EndingPoint is not empty";
-          }
-          return null;
-        },
-      ),
-      const SizedBox(
-        height: 50.0,
-      ),
-      SizedBox(
-        width: 200,
-        height: 50,
-        child: Material(
-
-          child: InkWell(
-            splashColor: Colors.greenAccent,
-            onTap: null,
-            child: AnimatedContainer(
-              duration: const Duration(seconds: 10),
-              width: 150,
-              height: 50,
-              alignment: Alignment.center,
-              decoration: const BoxDecoration(
-                  color: Colors.red
-              ),
-              child: changeButton
-                  ?const Icon(
-                  Icons.done
-              )
-                  : const Text("SearchRide",
+      child: SafeArea(
+        child: SingleChildScrollView(
+          child: Container(
+            width: 200,
+            margin: EdgeInsets.only(left: 5,right: 5,top: 5,bottom: 10),
+            color: Colors.red,
+            child: Column(
+              children: [
+                Container(
+                  height: 50,
+                  width: 300,
+                  margin: EdgeInsets.only(left: 5,right: 5,top: 10,bottom: 10),
+                  color: Colors.white,
+                  child: Align(
+                    alignment: Alignment.center,
+                  child: Text(
+                'UserName'.toUpperCase(),
                 style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
+
                 ),
               ),
+            ),
+                ),
+                Container(
+                  height: 50,
+                  width: 300,
+                  margin: EdgeInsets.only(left: 5,right: 5,top: 10,bottom: 10),
+                  color: Colors.white,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'sourceLocation'.toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
 
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 50,
+                  width: 300,
+                  margin: EdgeInsets.only(left: 5,right: 5,top: 10,bottom: 10),
+                  color: Colors.white,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Destination Location'.toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 50,
+                  width: 300,
+                  margin: EdgeInsets.only(left: 5,right: 5,top: 10,bottom: 10),
+                  color: Colors.white,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Date'.toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 50,
+                  width: 300,
+                  margin: EdgeInsets.only(left: 5,right: 5,top: 10,bottom: 10),
+                  color: Colors.white,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'time'.toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 50,
+                  width: 300,
+                  margin: EdgeInsets.only(left: 5,right: 5,top: 10,bottom: 10),
+                  color: Colors.white,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: TextFormField(
+                      enableInteractiveSelection: false,
+                      controller: totalSeatBook,
+                      keyboardType: TextInputType.text,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        contentPadding:
+                        EdgeInsets.only(left: 20, bottom: 11, top: 11, right: 15),
+                        labelText: "Total Seats",
+                      ),
+                    ),
+                  ),
+                ),
+
+
+                InkWell(
+                  child: Container(
+                    margin: EdgeInsets.only(top: 40,bottom: 20),
+                    height: 40,
+                    width: 250,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(25)),
+                        color: Colors.blueAccent,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.orangeAccent,
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                          )
+                        ]
+
+                    ),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Book Now'.toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+
+                        ),
+                      ),
+                    ),
+                  ),
+                  onTap: (){
+
+
+
+
+
+
+
+
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>RideBookScreen()));
+                  },
+                ),
+              ],
             ),
           ),
         ),
+
       )
-
-        ],
-        ),
-
-        ),
-        ],
-        )
-
-      ),
-    ),
     );
 
   }

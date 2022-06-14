@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'home_screen.dart';
@@ -106,13 +107,16 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                       await FirebaseAuth.instance.currentUser?.linkWithCredential(PhoneAuthProvider.credential(verificationId: mVerificationId, smsCode: _otp.text));
                       SharedPreferences preferences = await SharedPreferences.getInstance();
                       preferences.setString("mobile_number", "+91${_phoneNumber.text}");
-                      print("successful");
+
                       Map <String, dynamic> data={
-                        "Mobile Number": preferences.getString("mobile_number"),
-                        "Name": preferences.getString("displayName"),
-                        "Email": preferences.getString("email"),
+                        "photoUrl": preferences.getString("photoUrl"),
+                        "mobileNumber": preferences.getString("mobile_number"),
+                        "name": preferences.getString("displayName"),
+                        "email": preferences.getString("email"),
                       };
-                      FirebaseFirestore.instance.collection("User_Data").doc(preferences.getString("uid")).set(data);
+                      String? uid = preferences.getString("uid");
+                      await FirebaseDatabase.instance.ref("user_data").child(uid!).set(data);
+                      //FirebaseFirestore.instance.collection("User_Data").doc(preferences.getString("uid")).set(data);
                       Navigator.push(context, MaterialPageRoute(
                           builder: (context) => HomeScreen()));
 
