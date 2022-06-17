@@ -14,7 +14,7 @@ class SearchRide extends StatefulWidget {
 }
 
 class _SearchRideState extends State<SearchRide> {
-  List<String> list1 = [];
+  List<Rides> list = [];
   TextEditingController sourceLoc = TextEditingController();
   TextEditingController destinationLoc = TextEditingController();
   TextEditingController dateCtl = TextEditingController();
@@ -188,8 +188,7 @@ class _SearchRideState extends State<SearchRide> {
               ),
               onTap: () async {
 
-                List<Rides> list = [];
-                DatabaseReference dbRef = FirebaseDatabase.instance.reference();
+                DatabaseReference dbRef = FirebaseDatabase.instance.ref("user_data");
 
                 await FirebaseFirestore.instance
                     .collection("rides")
@@ -203,38 +202,40 @@ class _SearchRideState extends State<SearchRide> {
                     late String mobileNumber;
                     late String email;
 
-                    await dbRef.child(doc.id).once().then((values) {
-                      photoUrl = values.snapshot.child("photoUrl").value.toString();
-                      name = values.snapshot.child("name").value.toString();
-                      mobileNumber = values.snapshot.child("mobileNumber").value.toString();
-                      email = values.snapshot.child("email").value.toString();
+                    DatabaseEvent event = await dbRef.child(doc.id).once();
+                    name = event.snapshot.child("name").value.toString();
+                    mobileNumber = event.snapshot.child("mobileNumber").value.toString();
+                    email = event.snapshot.child("email").value.toString();
+                    photoUrl = event.snapshot.child("photoUrl").value.toString();
 
-                    });
 
                     list.add(Rides(
-                        doc["source"],
-                        doc["destination"],
+                        doc["Starting Point"],
+                        doc["Ending Point"],
                         dateCtl.text,
                         doc.id,
                         name,
                         photoUrl,
                         mobileNumber,
                         email,
-                        doc["totalSeats"],
-                        doc["time"],
-                        doc["route"]));
-                    print(doc["route"]+ " " +name);
+                        doc["Total Passenger"],
+                        doc["Time"],
+                        doc["Route Name"]
+                    )
+                    );
 
                     /*
                     //Read data from list
-                    Rides rides = list[index];
+                    Rides rides = list[0];
                     print(rides.name);
                     print(rides.photoUrl);
                     print(rides.time);
+                    print(list[0].name);
                     */
 
                   });
                 });
+
                 setState(() {
                   search = true;
                 });
@@ -247,65 +248,29 @@ class _SearchRideState extends State<SearchRide> {
       ),
 
 
-            if (search)...[
+            if (list.isNotEmpty)...[
               Container(
                 width: double.infinity,
                 height: 300,
                 color: Colors.red,
-                child: StreamBuilder<QuerySnapshot> (
-                  stream: FirebaseFirestore.instance.collection('rides').doc("${sourceLoc.text.toLowerCase()}${destinationLoc.text.toLowerCase()}").collection(dateCtl.text).snapshots(),
-                  builder: (context,snapshot) {
-                    if (!snapshot.hasData) {
-                      print('No Data...');
-                      return const Text("No data");
-                    }
-                    if (snapshot.hasError) {
-                      print('error');
-                      return const Text("Error");
-                    }
-                    if(snapshot.hasData){
-                      List picUrl = [];
-                      print(list1);
+                child: ListView.builder(
+                  itemCount: list.length,
+                    itemBuilder: (context,index){
 
-                      for(int i=0; i<snapshot.data!.docs.length; i++){
-                        DocumentSnapshot data = snapshot.data?.docs[i] as DocumentSnapshot<Object?>;
-                        FutureBuilder<DocumentSnapshot> (
-                            future: FirebaseFirestore.instance.collection('user_data').doc(data.id).get(),
-                            builder: (context,snapshot2) {
-                              if (!snapshot2.hasData) {
-                                print('No Data...');
-                                return const Text("No data");
-                              }else {
-                                picUrl.add(snapshot2.data!.get('Name'));
-                                print(snapshot2.data!.get('Name'));
-                                return const Text("found");
-                              }
-                            });
-
-                      }
-
-
-
-                      return ListView.builder(itemCount: snapshot.data?.docs.length,
-                          itemBuilder: (context, index) {
-                        String val = '';
-                            DocumentSnapshot data = snapshot.data?.docs[index] as DocumentSnapshot<Object?>;
-
-                            return Container(
-                              child: ListTile(
-                                title: Text(data.id),
-                                subtitle: Text(val),
-                              ),
-                            );
-                          });
-                      //return const Text("found");
-                    }
-                    return Center(child: CircularProgressIndicator());
-                  }
-                ),
+                      Rides rides = list[index];
+                      return ListTile(
+                          title: Text(rides.name),
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(
+                              builder: (context) =>  RideBookScreen(rides)));
+                        },
+                      );
+                    }),
               )
+            ]else if(search)...[
+              Text("Not Available!"),
             ]else...[
-              Text("Enter Source and Destination"),
+              Text("Enter data!"),
             ]
           ],
         ),
@@ -322,5 +287,11 @@ class _SearchRideState extends State<SearchRide> {
       //return Text(val);
     });
     return Text("data");
+  }
+
+  String getStartingPoint() {
+
+    Rides ride = list[0];
+    return ride.source;
   }
 }

@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         "/authenticationRoute": (context) => const AuthenticationScreen(),
         "/profileSetupRoute": (context) => const ProfileSetupScreen(),
         "/homeRoute": (context) => const HomeScreen(),
-        "/rideBookingRoute": (context) => const RideBookScreen(),
+        //"/rideBookingRoute": (context) => const RideBookScreen(),
         "/rideCreatingRoute": (context) => const RideCreateScreen(),
         "/travelHistoryRoute": (context) => const TravelHistoryScreen(),
       },

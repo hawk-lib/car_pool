@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class RideCreateScreen extends StatefulWidget {
   const RideCreateScreen({Key? key}) : super(key: key);
 
+
   @override
   State<RideCreateScreen> createState() => _RideCreateScreenState();
 }
@@ -15,8 +16,8 @@ class RideCreateScreen extends StatefulWidget {
 class _RideCreateScreenState extends State<RideCreateScreen> {
 
   late SharedPreferences preferences;
-  late String name;
-  late String mobileNumber;
+  String name = "";
+  String mobileNumber = "";
   String photoUrl = "https://lh3.googleusercontent.com/a/AATXAJx0D6NV1PCZ9r_U6yWNLWWVd2vALY2PfVKuuu8J=s96-c";
 
 
@@ -534,13 +535,12 @@ class _RideCreateScreenState extends State<RideCreateScreen> {
                           ),
                         ),
                       ),),
-                    onTap: (){
+                    onTap: () async {
 
                       Map <String, dynamic> data={
                         "Starting Point": strLoc.text,
                         "Ending Point": endLoc.text,
                         "Route Name": pathName.text,
-                        "Registration Date": DateTime.now(),
                         "Available Seats": presentSeats.text,
                         "Total Passenger": totalYatri.text,
                         "Time": time.text,
@@ -549,7 +549,18 @@ class _RideCreateScreenState extends State<RideCreateScreen> {
 
 
                       String sourceDestination = strLoc.text.toLowerCase() + endLoc.text.toLowerCase();
-                      FirebaseFirestore.instance.collection("rides").doc(sourceDestination).collection(dateCtl.text).doc(uid!).set(data);
+                      await FirebaseFirestore.instance.collection("rides")
+                          .doc(sourceDestination)
+                          .collection(dateCtl.text)
+                          .doc(uid!).set(data);
+
+                      await FirebaseFirestore.instance.collection("user_data")
+                          .doc(preferences.getString("uid")).collection("ride_created").doc(dateCtl.text).set({
+                        "Starting Point": strLoc.text,
+                        "Ending Point": endLoc.text,
+                        "Remaining Seats": presentSeats.text,
+                        "Timestamp": DateTime.now()
+                      }).then((value) => print("Successful"));
                       // FirebaseFirestore.instance.collection("user_data").add(data);
                     },
                   ),
@@ -568,6 +579,7 @@ class _RideCreateScreenState extends State<RideCreateScreen> {
 
   void init () async {
     preferences = await SharedPreferences.getInstance();
+
     setState(() {
       photoUrl = preferences.getString("photoUrl")!;
       mobileNumber = preferences.getString("mobile_number")!;
