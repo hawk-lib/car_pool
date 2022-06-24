@@ -50,6 +50,16 @@ dependencies:
   get: ^4.6.1
   firebase_database: ^9.0.14
   shared_preferences: ^2.0.15
+  flutter_easyloading: ^3.0.5
+  sms_autofill: ^2.2.0
+  overlay_support: ^2.0.1
+  connectivity: ^3.0.6
+  top_snackbar_flutter: ^2.0.0
+  blurrycontainer: 1.0.2
+
+
+
+
 
 dev_dependencies:
   flutter_test:
@@ -77,7 +87,7 @@ flutter:
   assets:
    - assets/icons/
    - assets/image/
-
+   - assets/background/Wallpaper.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
@@ -103,3 +113,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+assets/background/Wallpaper:
+  jpg:

@@ -1,14 +1,15 @@
 
-
 import 'package:car_pool/screens/profile_setup_screen.dart';
 import 'package:car_pool/screens/travel_history_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'home_screen.dart';
@@ -21,6 +22,8 @@ class AuthenticationScreen extends StatefulWidget {
 }
 
 class _AuthenticationScreenState extends State<AuthenticationScreen> {
+  @override
+
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +56,8 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
   login() async{
     GoogleSignInAccount result;
     GoogleSignIn googleSignIn = GoogleSignIn();
+    EasyLoading.show(status: 'loading').timeout(Duration(seconds: 100));
+
     try{
       result = (await googleSignIn.signIn())!;
       final userData = await result.authentication;
@@ -75,8 +80,11 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
       if(phoneNumber != null){
         prefs.setString('mobile_number', phoneNumber);
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+        EasyLoading.dismiss();
       }else{
         Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileSetupScreen()));
+        EasyLoading.dismiss();
+
       }
 
 
@@ -94,4 +102,5 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
       print(error);
     }
   }
+
 }

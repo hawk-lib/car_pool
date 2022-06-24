@@ -1,9 +1,15 @@
+import 'dart:async';
+
 import 'package:car_pool/utility/dataControler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 import '../utility/rides.dart';
 
@@ -17,257 +23,318 @@ class RideBookScreen extends StatefulWidget {
   State<RideBookScreen> createState() => _RideBookScreenState(rides);
 }
 
-  class _RideBookScreenState extends State<RideBookScreen>{
+  class _RideBookScreenState extends State<RideBookScreen> {
     int availableSeats = 0;
     TextEditingController totalSeatBook = TextEditingController();
     Rides rides;
+    _RideBookScreenState(this.rides);
 
-  _RideBookScreenState(this.rides);
+    void dialogbox() {
+      showDialog(context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Thanks for booking'),
+                    CloseButton(
+                        color: Color(0xFFD5D3D3),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        })
+                  ]
+
+              ),
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(rides.mobileNumber,textAlign: TextAlign.center,style: TextStyle(color: Colors.indigo,fontWeight: FontWeight.bold),),
+                ],
+              ),
+              actions: [
+                IconButton(onPressed: (){},
+                    icon: Icon(Icons.call)),
+                IconButton(onPressed: (){},
+                    icon: Icon(Icons.whatsapp)),
+                IconButton(onPressed: (){},
+                    icon: Icon(Icons.add)),
+                IconButton(onPressed: (){},
+                    icon: Icon(Icons.message))
+              ],
+              actionsPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+              alignment: Alignment.center,
+
+            );
+          }
+      );
+    }
+
+    Future<SharedPreferences> getData() async{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      return prefs;
+    }
+    @override
+
+
 
     @override
     Widget build(BuildContext context) {
-      return Material(
-          child: SafeArea(
-            child: SingleChildScrollView(
-              child: Container(
-                width: 200,
-                margin: EdgeInsets.only(left: 5,right: 5,top: 5,bottom: 10),
-                color: Colors.red,
-                child: Column(
-                  children: [
-                    Container(
-                      height: 50,
-                      width: 300,
-                      margin: EdgeInsets.only(left: 5,right: 5,top: 10,bottom: 10),
-                      color: Colors.white,
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          rides.name,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
+      return MaterialApp(
 
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 50,
-                      width: 300,
-                      margin: EdgeInsets.only(left: 5,right: 5,top: 10,bottom: 10),
-                      color: Colors.white,
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          rides.source,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 50,
-                      width: 300,
-                      margin: EdgeInsets.only(left: 5,right: 5,top: 10,bottom: 10),
-                      color: Colors.white,
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          rides.destination,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 50,
-                      width: 300,
-                      margin: EdgeInsets.only(left: 5,right: 5,top: 10,bottom: 10),
-                      color: Colors.white,
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          rides.date,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 50,
-                      width: 300,
-                      margin: EdgeInsets.only(left: 5,right: 5,top: 10,bottom: 10),
-                      color: Colors.white,
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          rides.time,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    Container(
-                      height: 50,
-                      width: 300,
-                      margin: EdgeInsets.only(left: 5,right: 5,top: 10,bottom: 10),
-                      color: Colors.white,
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                          stream: FirebaseFirestore.instance.collection("user_data")
-                              .doc(rides.id)
-                              .collection("ride_created")
-                              .doc(rides.date)
-                              .snapshots(),
-                          builder: (context,snapshot){
-                            if(!snapshot.hasData){
-                              return const Text("loading..");
-                            }else{
-                              availableSeats = int.parse(snapshot.data?.data()!['Remaining Seats']);
-                              return Text(availableSeats.toString());
-
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-
-                    Container(
-                      margin: EdgeInsets.only(left: 20, top:12, right: 20, bottom:12),
-
-                      decoration: BoxDecoration(
-
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        border: Border.all(
-                            color: Colors.black
-                        ),
-
-
-                      ),
-                      child: TextFormField(
-                        enableInteractiveSelection: false,
-                        controller: totalSeatBook,
-                        keyboardType: TextInputType.text,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                          contentPadding:
-                          EdgeInsets.only(left: 20, bottom: 11, top: 11, right: 15),
-                          hintText: "Number of Seats",
-                        ),
-                      ),
-
+        home: Scaffold(
+          body: SafeArea(
+            child: Container(
+              height: double.infinity,
+              width: double.infinity,
+              color: Colors.white,
+              child: Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(left: 15,right: 15),
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Colors.green
 
                     ),
-
-
-                    InkWell(
-                      child: Container(
-                        margin: EdgeInsets.only(top: 40,bottom: 20),
-                        height: 40,
-                        width: 250,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(25)),
-                            color: Colors.blueAccent,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.orangeAccent,
-                                spreadRadius: 2,
-                                blurRadius: 5,
-                              )
-                            ]
-
-                        ),
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            'Book Now'.toUpperCase(),
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-
+                    child: Column(
+                      children: [
+                        Container(
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              rides.name.toUpperCase(),
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      onTap: () async {
-                        int seats=int.parse(totalSeatBook.text);
-                        if(availableSeats>0){
-                        SharedPreferences preferences = await SharedPreferences.getInstance();
-                        if(seats<=availableSeats){
-                          await FirebaseFirestore.instance.collection("rides")
-                              .doc("${rides.source}${rides.destination}")
-                              .collection(rides.date)
-                              .doc(rides.id).set({
+                        Container(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              rides.source.toUpperCase(),
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
 
-                            "Passengers": {
-                              "${preferences.getString("uid")}":"$seats"
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              rides.destination.toUpperCase(),
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              rides.date.toUpperCase(),
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              rides.time.toUpperCase(),
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.only(top: 15),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: StreamBuilder<
+                                DocumentSnapshot<Map<String, dynamic>>>(
+                              stream: FirebaseFirestore.instance.collection(
+                                  "user_data")
+                                  .doc(rides.id)
+                                  .collection("ride_created")
+                                  .doc(rides.date)
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return const Text("loading..");
+                                } else {
+                                  availableSeats = int.parse(
+                                      snapshot.data?.data()!['Remaining Seats']);
+                                  return Text(availableSeats.toString());
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.only(top: 10,left: 20,right: 20,bottom: 5),
+                          child:TextFormField(
+                            enableInteractiveSelection: false,
+                            controller: totalSeatBook,
+                            keyboardType: TextInputType.text,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              errorBorder: InputBorder.none,
+                              disabledBorder: InputBorder.none,
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Color(0xFFF1F1F1)),
+                                borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                              ),
+                              contentPadding:
+                              EdgeInsets.only(left: 20, bottom: 11, top: 11, right: 15),
+                              hintText: "Seats Book",
+                              prefixIcon: Padding(padding: EdgeInsets.only(left: 2,right: 2),
+                                  child: Icon(
+                                    Icons.route,
+                                    color: Color(0xFF00E676),
+                                  )
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 20),
+                    child: SizedBox(
+                      width: 200,
+                      child: ElevatedButton(
+                          style: ButtonStyle(
+                              foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                              backgroundColor: MaterialStateProperty.all<Color>(Colors.indigo),
+                              shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ))
+                          ),
+                          onPressed: ()async {
+
+                            int seats = int.parse(totalSeatBook.text);
+                            if (availableSeats > 0) {
+                              SharedPreferences preferences = await SharedPreferences
+                                  .getInstance();
+                              if (seats <= availableSeats) {
+                                var firestoreDB = await FirebaseFirestore.instance.collection("rides")
+                                    .doc("${rides.source}${rides.destination}")
+                                    .collection(rides.date)
+                                    .doc(rides.id);
+                                var firestoreUserData = await FirebaseFirestore.instance.collection(
+                                    "user_data")
+                                    .doc(preferences.getString("uid")).collection(
+                                    "ride_booked").doc(rides.date);
+                                firestoreUserData.get().then((value) async {
+                                  if(value.exists){
+                                    snackBar("Already Booked");
+                                  }else{
+                                    firestoreDB.set({
+
+                                      "Passengers": {
+                                        "${preferences.getString("uid")}": "$seats"
+                                      }
+                                    }, SetOptions(merge: true)).then((value) async {
+                                      int seat = availableSeats - seats;
+                                      await FirebaseFirestore.instance.collection(
+                                          "user_data")
+                                          .doc(rides.id).collection("ride_created").doc(
+                                          rides.date).update({
+                                        "Remaining Seats": "$seat",
+                                      });
+                                    });
+                                    await FirebaseFirestore.instance.collection(
+                                        "user_data")
+                                        .doc(preferences.getString("uid")).collection(
+                                        "ride_booked").doc(rides.date).set({
+                                      "Starting Point": rides.source,
+                                      "Ending Point": rides.destination,
+                                      "User": rides.id,
+                                      "Seats": seats,
+                                      "Timestamp": DateTime.now()
+                                    }).then((value) => dialogbox());
+                                  }
+                                });
+
+                              } else {
+                                snackBar("Sorry! only ${availableSeats} available!");
+                              }
+                            } else {
+                              snackBar("No seats are available!");
                             }
 
-                          }, SetOptions(merge: true)).then((value) async {
-
-                            int seat = availableSeats-seats;
-                            await FirebaseFirestore.instance.collection("user_data")
-                                .doc(rides.id).collection("ride_created").doc(rides.date).update({
-                              "Remaining Seats": "$seat",
-                            });
-                          });
-                          await FirebaseFirestore.instance.collection("user_data")
-                          .doc(preferences.getString("uid")).collection("ride_booked").doc(rides.date).set({
-                            "Starting Point": rides.source,
-                            "Ending Point": rides.destination,
-                            "User": rides.id,
-                            "Seats": seats,
-                            "Timestamp": DateTime.now()
-                          }).then((value) => print("Successful"));
-
-                        }else{
-                          print("Sorry! only ${availableSeats} available!");
-                        }
-                      }else{
-                          print("No seats are available!");
-                        }
-
-                        //Navigator.push(context, MaterialPageRoute(builder: (context)=>RideBookScreen()));
-                      },
+                            //Navigator.push(context, MaterialPageRoute(builder: (context)=>RideBookScreen()));
+                          }, child: Text("Book Now",style: TextStyle(fontSize: 20),)),
                     ),
-                  ],
-                ),
+                  )
+
+
+                ],
               ),
             ),
+          ),
+        ),
 
-          )
       );
-
-
     }
 
+    void dataRefrence() async {
+      DatabaseReference dbRef = FirebaseDatabase.instance.ref("user_data");
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      await FirebaseFirestore.instance
+          .collection("rides")
+          .get()
+          .then((QuerySnapshot querySnapshot) {
+        querySnapshot.docs.forEach((doc) async {
+          late String mobileNumber;
+
+          DatabaseEvent event = await dbRef.child(doc.id).once();
+
+          mobileNumber = event.snapshot
+              .child("mobileNumber")
+              .value
+              .toString();
 
 
+
+
+        });
+      });
+    }
+    void snackBar(String m){
+      showTopSnackBar(
+        context,
+        CustomSnackBar.error(
+          message: m,
+        ),
+      );
+    }
   }
 

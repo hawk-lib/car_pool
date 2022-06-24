@@ -61,9 +61,27 @@ class SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double _targetSize = 600;
     return Container(
         color: Colors.white,
-        child:Image.asset("assets/icons/google.png",height: 100,width: 100,)
+        child:TweenAnimationBuilder(tween: Tween<double>(begin: 50,end: _targetSize),
+
+            duration: Duration(seconds: 10),
+            onEnd: () {
+              setState(() {
+                if (_targetSize == 50) {
+                  _targetSize = 600;
+                } else {
+                  _targetSize = 50;
+                }
+              });
+            },
+            curve: Curves.linear,
+            builder: (BuildContext _, double size, Widget? __){
+              return Icon(Icons.card_membership,
+              color: Colors.greenAccent,
+              size: size,);
+            },)
     );
   }
 }
