@@ -1,6 +1,8 @@
 
 
 
+import 'package:car_pool/screens/ride_booking_screen.dart';
+import 'package:car_pool/utility/appPreferences.dart';
 import 'package:car_pool/utility/rides.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,7 +19,78 @@ class TravelHistoryScreen extends StatelessWidget {
     );
     // TODO: implement build
     return MaterialApp(
-      home: Scaffold(body: SafeArea(child: viewPager()))
+      home: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text("Travel History"),
+            bottom: TabBar(
+              tabs: [
+                Tab(text: "CreateHistory",),
+                Tab(text: "SearchHistory",)
+
+
+              ],
+
+            ),
+          ),
+
+            body: TabBarView(children: [
+              Center(child: FutureBuilder<QuerySnapshot> (
+                future: FirebaseFirestore.instance.collection("user_data")
+                .doc(AppPreferences.getUID())
+                .collection("ride_created")
+                .get(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot){
+
+                  if(snapshot.connectionState==ConnectionState.waiting){
+                    return Text("Loading...");
+                  }else if(snapshot.hasData){
+                    List<RidesHistory> list = [];
+                    snapshot.data?.docs.forEach((element) async {
+
+                      String strt = element['Starting Point'];
+                      String ending = element['Ending Point'];
+                      String date = element.id;
+                      String remain = element['Remaining Seats'];
+
+
+                      list.add(RidesHistory(
+                          strt,
+                          ending,
+                          date,
+                          remain,
+                      ));
+                    });
+                    return ListView.builder(
+                        itemCount: list.length,
+                        itemBuilder: (context, index) {
+
+                          return Card(
+                            child: ListTile(
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+                              title: Text(list[index].source+" TO " + list[index].destination),
+                              subtitle: Text(list[index].date),
+                              trailing: Text(list[index].remainingSeats),
+
+
+                              onTap: (){
+                              },
+                            ),
+                          );
+
+                    });
+                  }else{
+                    return Text("failed to load");
+                  }
+
+                },
+              ),),
+              Center(child: Text("hii"),)
+            ])
+
+        ),
+      )
     );
   }
    viewPager(){
@@ -50,21 +123,30 @@ class TravelHistoryScreen extends StatelessWidget {
         });
   }
 
-  Future<List<RidesCreated>> loadData() async {
-    List<RidesCreated> list = [];
+
+  /*Future<RidesHistory>> getHistoryData() async {
+    late List<RidesHistory> list = [];
+
     SharedPreferences pref = await SharedPreferences.getInstance();
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection("user_data")
-        .doc(pref.getString("uid"))
-        .collection("ride_created")
-        .get();
+    QuerySnapshot querySnapshot =
     querySnapshot.docs.forEach((element) {
-      list.add(RidesCreated(
+      print(element.id);
+      return RidesHistory(
           element['Starting Point'],
           element['Ending Point'],
-          element['Remaining Seats'],
           element.id,
-          element['Timestamp']));
+          element['Remaining Seats'],
+          pref.getString("uid")!,
+          element['Timestamp'],
+          element['Price'],
+          element['Route'],
+          element['Time'],
+          element['Total Passenger']
+      );
+      list.add();
     });
     return list;
-  }
+
+
+  }*/
 }

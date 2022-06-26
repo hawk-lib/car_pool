@@ -88,6 +88,13 @@ flutter:
    - assets/icons/
    - assets/image/
    - assets/background/Wallpaper.jpg
+   - assets/background/night.jpg
+   - assets/background/road.jpg
+   - assets/background/Road2.jpg
+   - assets/background/ship.jpeg
+   - assets/background/ballon.jpeg
+   - assets/image/register.png
+   - assets/image/carImage.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

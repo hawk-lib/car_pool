@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:car_pool/utility/dataControler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -86,143 +87,165 @@ class RideBookScreen extends StatefulWidget {
             child: Container(
               height: double.infinity,
               width: double.infinity,
-              color: Colors.white,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage("assets/background/road.jpg"),
+                      fit: BoxFit.cover
+                  )
+              ),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
                     margin: EdgeInsets.only(left: 15,right: 15),
                     decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      color: Colors.green
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
 
                     ),
-                    child: Column(
-                      children: [
-                        Container(
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              rides.name.toUpperCase(),
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black,
+                    child: BlurryContainer(
+                      blur: 10,
+                      elevation: 0.5,
+                      color: Colors.white.withOpacity(0.1),
+                      borderRadius: BorderRadius.all(Radius.circular(25)),
+                      child: Container(
+                        
+                        padding: EdgeInsets.all(20),
+   
+                        child: Column(
+                          children: [
+                            Container(
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text("Rider-${rides.name}"
+                                  ,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.only(top: 20),
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              rides.source.toUpperCase(),
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black,
+                            Container(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text("Source - ${rides.source}"
+                                  ,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.white,
 
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.only(top: 20),
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              rides.destination.toUpperCase(),
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black,
+                            Container(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  rides.destination.toUpperCase(),
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.white,
 
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.only(top: 20),
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              rides.date.toUpperCase(),
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black,
+                            Container(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text("Destination-${rides.date}"
+                                  ,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.white,
 
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.only(top: 20),
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              rides.time.toUpperCase(),
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black,
+                            Container(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text("Time-${ rides.time.toUpperCase()}"
+                                 ,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.white,
 
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.only(top: 15),
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: StreamBuilder<
-                                DocumentSnapshot<Map<String, dynamic>>>(
-                              stream: FirebaseFirestore.instance.collection(
-                                  "user_data")
-                                  .doc(rides.id)
-                                  .collection("ride_created")
-                                  .doc(rides.date)
-                                  .snapshots(),
-                              builder: (context, snapshot) {
-                                if (!snapshot.hasData) {
-                                  return const Text("loading..");
-                                } else {
-                                  availableSeats = int.parse(
-                                      snapshot.data?.data()!['Remaining Seats']);
-                                  return Text(availableSeats.toString());
-                                }
-                              },
-                            ),
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.only(top: 10,left: 20,right: 20,bottom: 5),
-                          child:TextFormField(
-                            enableInteractiveSelection: false,
-                            controller: totalSeatBook,
-                            keyboardType: TextInputType.text,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Color(0xFFF1F1F1)),
-                                borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                              ),
-                              contentPadding:
-                              EdgeInsets.only(left: 20, bottom: 11, top: 11, right: 15),
-                              hintText: "Seats Book",
-                              prefixIcon: Padding(padding: EdgeInsets.only(left: 2,right: 2),
-                                  child: Icon(
-                                    Icons.route,
-                                    color: Color(0xFF00E676),
-                                  )
+                            Container(
+                              padding: const EdgeInsets.only(top: 15),
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: StreamBuilder<
+                                    DocumentSnapshot<Map<String, dynamic>>>(
+                                  stream: FirebaseFirestore.instance.collection(
+                                      "user_data")
+                                      .doc(rides.id)
+                                      .collection("ride_created")
+                                      .doc(rides.date)
+                                      .snapshots(),
+                                  builder: (context, snapshot) {
+                                    if (!snapshot.hasData) {
+                                      return const Text("loading..");
+                                    } else {
+                                      availableSeats = int.parse(
+                                          snapshot.data?.data()!['Remaining Seats']);
+                                      return Text("Remaining Seats-${availableSeats.toString()}", style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.white,
+
+                                      ),);
+                                    }
+                                  },
+                                ),
                               ),
                             ),
-                          ),
+                            Container(
+                              padding: const EdgeInsets.only(top: 10,left: 20,right: 20,bottom: 5),
+                              child:TextFormField(
+                                enableInteractiveSelection: false,
+                                controller: totalSeatBook,
+                                keyboardType: TextInputType.text,
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  errorBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Color(0xFFF1F1F1)),
+                                    borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                                  ),
+                                  contentPadding:
+                                  EdgeInsets.only(left: 20, bottom: 11, top: 11, right: 15),
+                                  hintText: "Seats Book",
+                                  prefixIcon: Padding(padding: EdgeInsets.only(left: 2,right: 2),
+                                      child: Icon(
+                                        Icons.route,
+                                        color: Color(0xFF00E676),
+                                      )
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                   Container(

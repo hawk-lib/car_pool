@@ -1,3 +1,4 @@
+import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:car_pool/screens/authentication_screen.dart';
 import 'package:car_pool/screens/drawer.dart';
 import 'package:car_pool/screens/ride_booking_screen.dart';
@@ -24,150 +25,114 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement build
     return  MaterialApp(
       home: Scaffold(
-              backgroundColor: Colors.white,
-              //backgroundColor: Colors.red,
-        appBar: AppBar(
-          title: Text("Car Pool"),
-        ),
-        drawer: NavigationDrawerWidget(),
-        body: Stack(
-          children: [
-            Positioned(
-              top: 40,
-            height: 260.0,
-            left: 10.0,
-            right: 10.0,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white12,
-                    border: Border.all(width: 5,color: Color(0xfffAFAFA)),
-                    image: DecorationImage(image: AssetImage("assets/image/car.png"),
-                      fit: BoxFit.fill,
-                    ),
-                  ) ,
+                backgroundColor: Colors.transparent,
+                //backgroundColor: Colors.red,
+          appBar: AppBar(
+            title: Text("Car Pool"),
+            backgroundColor: Colors.black.withOpacity(0.4),
 
-            )
+          ),
+
+          drawer: NavigationDrawerWidget(),
+          body: Container(
+            height: double.infinity,
+            width: double.infinity,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage("assets/image/register.png"),
+                    fit: BoxFit.cover
+                )
             ),
-            Positioned(
-              bottom: 60.0,
-              height: 260.0,
-              left: 10.0,
-              right: 10.0,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(left: 20, top:20, right: 20, bottom:20),
-                      height: 80,
-                      width: 300,
-
-                      decoration: const BoxDecoration(
-                          color: Colors.white70,
-
-                      ),
-
-                      child: InkWell(
-                        child: Container(
-
-                          margin: EdgeInsets.only(left: 20, top:12, right: 20, bottom:12),
-                          height: 60,
-                          width: 250,
-                          decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(20)),
-
-                              color: Color(0xffffccbc),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0xfffbe9e7),
-                                  spreadRadius: 2,
-                                  blurRadius: 10,
-
-                                )
-                              ]
-                          ),
-
-
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              'Create Ride'.toUpperCase(),
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.blueAccent,
-
-                              ),
-                            ),
-                          ),
+            child: Stack(
+              children: [
+                Positioned(
+                  top: 40,
+                height: 260.0,
+                left: 10.0,
+                right: 10.0,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        image: DecorationImage(image: AssetImage("assets/image/carImage.png"),
+                          fit: BoxFit.fill,
                         ),
-                        onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>RideCreateScreen()));
-                        },
-                      ),
+                      ) ,
 
-
+                )
+                ),
+                Positioned(
+                  bottom: 60.0,
+                  height: 260.0,
+                  left: 10.0,
+                  right: 10.0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
                     ),
-                    Container(
-                      margin: EdgeInsets.only(left: 20, top:5, right: 20, bottom:40),
-                      height: 80,
-                      width: 300,
-                      decoration: const BoxDecoration(
-                          color: Colors.white70,
+                    child: Column(
+                      children: [
+                        Container(
+                          color: Colors.transparent,
+                          padding: EdgeInsets.all(20),
 
+                         
 
-                      ),
-                      child:InkWell(
-                        child: Container(
-                          margin: EdgeInsets.only(left: 20, top:12, right: 20, bottom:12),
-                          height: 60,
-                          width: 250,
-                          decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(20)),
-
-                              color: Color(0xffaed581),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0xfffbe9e7),
-                                  spreadRadius: 2,
-                                  blurRadius: 10,
-
+                          child: SizedBox(
+                            width: 200,
+                            height: 50,
+                            child: ElevatedButton(
+                                style: ButtonStyle(
+                                    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                    backgroundColor: MaterialStateProperty.all<Color>(Colors.indigoAccent),
+                                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ))
                                 ),
-                              ]
-                          ),
 
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              'Book Ride'.toUpperCase(),
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.red,
+                                onPressed: (){
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>RideCreateScreen()));
+                                }, child: Text("Create Ride")),
+                          )
 
-                              ),
-                            ),
-                          ),
+
+
                         ),
-                        onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchRide()));
+                        Container(
 
-                        }
-                        ,
-                      ),
+                          decoration: const BoxDecoration(
+                              color: Colors.transparent,
 
 
+                          ),
+                          child:SizedBox(
+                            width: 200,
+                            height: 50,
+                            child: ElevatedButton(
+                                style: ButtonStyle(
+                                    foregroundColor: MaterialStateProperty.all<Color>(Colors.indigo),
+                                    backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ))
+                                ),
+
+                                onPressed: (){
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchRide()));
+                                }, child: Text("Book Ride")),
+                          )
+
+
+                        ),
+
+                      ],
                     ),
+                  ),
+                )
+              ],
+            ),
+          )
+        ),
 
-                  ],
-                ),
-              ),
-            )
-          ],
-        )
-      ),
     );
   }
 

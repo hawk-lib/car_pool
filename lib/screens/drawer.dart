@@ -47,7 +47,7 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
       child: Column(
         children: <Widget>[
           Container(
-            color: Colors.greenAccent,
+            color: Colors.black.withOpacity(0.7),
             width: double.infinity,
             padding: EdgeInsets.all(20),
             child: Column(
@@ -75,43 +75,36 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
               ],
             ),
           ),
-          ListTile(
-            leading: const Icon(Icons.person),
-            title: const Text('Travel History'),
-            onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>TravelHistoryScreen()));
-            },
+          Card(
+            margin: EdgeInsets.only(left: 10,right: 10,top:1),
+            child: ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Travel History'),
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>TravelHistoryScreen()));
+              },
+            ),
           ),
-          const ListTile(
-            leading: Icon(Icons.account_box),
-            title: Text('about'),
-            onTap: null,
+
+          Card(
+            margin: EdgeInsets.only(left: 10,right: 10,top: 1),
+            child: const ListTile(
+              leading: Icon(Icons.contact_mail),
+              title: Text('contact'),
+              onTap: null,
+            ),
           ),
-          const ListTile(
-            leading: Icon(Icons.contact_mail),
-            title: Text('contact'),
-            onTap: null,
-          ),
-          const ListTile(
-            leading: Icon(Icons.share),
-            title: Text('Share'),
-            onTap: null,
-          ),
-          const ListTile(
-            leading: Icon(Icons.privacy_tip),
-            title: Text('Privacy Policy'),
-            onTap: null,
-          ),
-          const ListTile(
-            leading: Icon(Icons.card_membership),
-            title: Text('Support'),
-            onTap: null,
-          ),
-          ListTile(
-            leading: const Icon(Icons.arrow_back),
-            title: const Text('Logout'),
-            onTap: (){ logout();
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const AuthenticationScreen()));},
+
+
+
+          Card(
+            margin: EdgeInsets.only(left: 10,right: 10,top: 1),
+            child: ListTile(
+              leading: const Icon(Icons.arrow_back),
+              title: const Text('Logout'),
+              onTap: (){ logout();
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const AuthenticationScreen()));},
+            ),
           ),
         ],
       ),

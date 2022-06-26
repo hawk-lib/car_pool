@@ -140,3 +140,37 @@ class RidesCreated {
     _destination = value;
   }
 }
+
+class RidesHistory {
+  String _source;
+  String _destination;
+  String _date;
+  String _remainingSeats;
+
+  RidesHistory(
+      this._source, this._destination, this._date, this._remainingSeats);
+
+  String get remainingSeats => _remainingSeats;
+
+  set remainingSeats(String value) {
+    _remainingSeats = value;
+  }
+
+  String get date => _date;
+
+  set date(String value) {
+    _date = value;
+  }
+
+  String get destination => _destination;
+
+  set destination(String value) {
+    _destination = value;
+  }
+
+  String get source => _source;
+
+  set source(String value) {
+    _source = value;
+  }
+}

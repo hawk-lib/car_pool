@@ -37,13 +37,8 @@ class _SearchRideState extends State<SearchRide>  {
             children: [
           Container(
           width: double.infinity,
-            decoration:  BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.bottomLeft,
-                  end: Alignment.topRight,
-                  colors: [Color(0xFF00E676), Color(0xFFB3F6CA)]),
-
-            ),
+            padding: EdgeInsets.only(top: 20,bottom: 20),
+            color: Colors.black.withOpacity(0.5),
 
           child: Column(
             children: [
@@ -51,7 +46,6 @@ class _SearchRideState extends State<SearchRide>  {
               Container(
                 height: 40,
                 width: 200,
-                margin: EdgeInsets.only(top: 20),
                 decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(25)),
                     color: Colors.white
@@ -110,7 +104,7 @@ class _SearchRideState extends State<SearchRide>  {
               Container(
                 height: 40,
                 width: 200,
-                margin: EdgeInsets.only(top: 10,left: 80,right: 10),
+                margin: EdgeInsets.only(top: 4,left: 80,right: 10),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(25)),
                     color: Colors.white
@@ -283,7 +277,23 @@ class _SearchRideState extends State<SearchRide>  {
               ]else if(search)...[
                 Text("Not Available!"),
               ]else...[
-                Text("Enter data!"),
+                     Container(
+                      color: Colors.green,
+                      height: 100,
+                        child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("The world is waiting for you."),
+                                Text("Good Luck"),
+                                Text("Travel Safe. Go!"),
+
+
+                              ],
+                            ))
+                     ),
+
+
               ]
             ],
           ),
@@ -313,6 +323,7 @@ class _SearchRideState extends State<SearchRide>  {
     Rides ride = list[0];
     return ride.source;
   }
+
   
   
 }
