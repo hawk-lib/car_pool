@@ -1,6 +1,7 @@
 
 import 'package:car_pool/screens/profile_setup_screen.dart';
 import 'package:car_pool/screens/travel_history_screen.dart';
+import 'package:car_pool/utility/appPreferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +12,8 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 import 'home_screen.dart';
 
@@ -28,35 +31,35 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
-            child:  buildLoginButton()
-        )
-        ,
-
-
-      ),
+    return Scaffold(
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          padding: EdgeInsets.only(bottom: 100),
+          alignment: Alignment.bottomCenter,
+          decoration: const BoxDecoration(
+            color: Colors.lightBlue,
+          ),
+          child: SafeArea(
+            child: FloatingActionButton.extended(onPressed: () {
+              login();
+            },
+                icon: Image.asset("assets/icons/google.png",
+                  height: 32,
+                  width: 32,
+                ),
+                label: const Text("google sign in"),
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black),
+          ),
+        ),
     );
   }
 
-  FloatingActionButton buildLoginButton() {
-    return FloatingActionButton.extended(onPressed: () {
-      login();
-    },
-        icon: Image.asset("assets/icons/google.png",
-          height: 32,
-          width: 32,
-        ),
-        label: const Text("google sign in"),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black);
-
-  }
   login() async{
     GoogleSignInAccount result;
     GoogleSignIn googleSignIn = GoogleSignIn();
-    EasyLoading.show(status: 'loading').timeout(Duration(seconds: 100));
+    EasyLoading.show(status: 'loading');
 
     try{
       result = (await googleSignIn.signIn())!;
@@ -66,41 +69,47 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
       );
       FirebaseAuth mAuth = FirebaseAuth.instance;
       await mAuth.signInWithCredential(credential);
-      String userId = mAuth.currentUser!.uid;
       String? phoneNumber = mAuth.currentUser!.phoneNumber;
 
       /*FirebaseDatabase db = FirebaseDatabase.instance;
       DatabaseReference ref = db.ref("users").child(userId);*/
+      AppPreferences.setEmail(result.email);
+      AppPreferences.setPhotoUrl(result.photoUrl!);
+      AppPreferences.setDisplayName(result.displayName!);
+      AppPreferences.setUID(mAuth.currentUser!.uid);
 
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('email', result.email);
-      prefs.setString('photoUrl', result.photoUrl!);
-      prefs.setString('displayName', result.displayName!);
-      prefs.setString('uid', userId);
+
       if(phoneNumber != null){
-        prefs.setString('mobile_number', phoneNumber);
+        AppPreferences.setMobileNumber(phoneNumber);
+        EasyLoading.dismiss();
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
-        EasyLoading.dismiss();
       }else{
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileSetupScreen()));
         EasyLoading.dismiss();
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileSetupScreen()));
 
       }
-
-
-/*
-      final snapshot = await ref.child('users/$userId').get();
-      if (snapshot.exists) {
-        print(snapshot.value);
-        return 3;
-      } else {
-        print('No data available.');
-        return 2;
-      }*/
-
     }catch (error){
-      print(error);
+      snackBar(error.toString(), Colors.black);
     }
+  }
+
+  void snackBar(String m, Color color){
+    showTopSnackBar(
+      context,
+      CustomSnackBar.error(
+        message: m, backgroundColor: color,
+      ),
+    );
+  }
+
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    if(EasyLoading.isShow){
+      EasyLoading.dismiss();
+    }
+    super.dispose();
   }
 
 }

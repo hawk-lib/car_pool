@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.whawk.car_pool">
    <application
-        android:label="car_pool"
+        android:label="Car Pool"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

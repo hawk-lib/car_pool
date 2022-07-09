@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:car_pool/screens/profile_setup_screen.dart';
+import 'package:car_pool/utility/appPreferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -18,70 +19,79 @@ class SplashScreenState extends State<SplashScreen> {
 
 
   @override
-  void initState(){
+  void initState() {
     init();
     super.initState();
   }
 
   init() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    if(FirebaseAuth.instance.currentUser!=null){
-      if(preferences.containsKey("mobile_number")){
+    if (FirebaseAuth.instance.currentUser != null) {
+      if (AppPreferences.containsKey("mobile_number")) {
         Timer(const Duration(seconds: 2),
-                ()=>Navigator.pushReplacement(context,
-                MaterialPageRoute(builder:
-                    (context) => const HomeScreen()
+                () =>
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder:
+                        (context) => const HomeScreen()
+                    )
                 )
-            )
         );
       } else {
         Timer(const Duration(seconds: 2),
-                ()=>Navigator.pushReplacement(context,
-                MaterialPageRoute(builder:
-                    (context) => const ProfileSetupScreen()
+                () =>
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder:
+                        (context) => const ProfileSetupScreen()
+                    )
                 )
-            )
         );
       }
-    }else{
-      if(preferences.containsKey("email")) {
+    } else {
+      if (AppPreferences.containsKey("email")) {
         await GoogleSignIn().signOut();
-        preferences.clear();
+        AppPreferences.clear();
       }
       Timer(const Duration(seconds: 2),
-              ()=>Navigator.pushReplacement(context,
-              MaterialPageRoute(builder:
-                  (context) => const AuthenticationScreen()
+              () =>
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder:
+                      (context) => const AuthenticationScreen()
+                  )
               )
-          )
       );
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
-    double _targetSize = 600;
-    return Container(
-        color: Colors.white,
-        child:TweenAnimationBuilder(tween: Tween<double>(begin: 50,end: _targetSize),
-
-            duration: Duration(seconds: 10),
-            onEnd: () {
-              setState(() {
-                if (_targetSize == 50) {
-                  _targetSize = 600;
-                } else {
-                  _targetSize = 50;
-                }
-              });
-            },
-            curve: Curves.linear,
-            builder: (BuildContext _, double size, Widget? __){
-              return Icon(Icons.card_membership,
-              color: Colors.greenAccent,
-              size: size,);
-            },)
+    return Scaffold(
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        color: Colors.lightBlue,
+        child: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                  height: 150,
+                  width: 150,
+                  child: Image.asset("assets/icons/ic_launcher.png")
+              ),
+              Text(
+                "Car Pool",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 40,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 3,
+                  wordSpacing: 4,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

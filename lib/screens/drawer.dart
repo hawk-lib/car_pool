@@ -1,4 +1,5 @@
 import 'package:car_pool/screens/travel_history_screen.dart';
+import 'package:car_pool/utility/appPreferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,118 +16,133 @@ class NavigationDrawerWidget extends StatefulWidget {
 }
 
 class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
-  String email = "";
-  String photoUrl = "https://lh3.googleusercontent.com/a/AATXAJx0D6NV1PCZ9r_U6yWNLWWVd2vALY2PfVKuuu8J=s96-c";
-  String displayName = "";
+  String email = AppPreferences.getEmail();
+  String photoUrl = AppPreferences.getPhotoUrl();
+  String displayName = AppPreferences.getDisplayName();
   late String mVerificationId;
 
 
-
-  Future<SharedPreferences> getData() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs;
-  }
   @override
-  void initState() {
-    getData().then((prefs) {
-      setState(() {
-        email = prefs.getString("email")!;
-        photoUrl = prefs.getString("photoUrl")!;
-        displayName = prefs.getString("displayName")!;
-      });
-    });
-
-    super.initState();
-  }
-  @override
-
-
   Widget build(BuildContext context) {
     return Drawer(
       backgroundColor: Colors.white,
       child: Column(
         children: <Widget>[
           Container(
-            color: Colors.black.withOpacity(0.7),
+            color: Colors.lightBlue,
             width: double.infinity,
-            padding: EdgeInsets.all(20),
-            child: Column(
-              children: <Widget>[
-                Container(
-                child: Column(
-                  children: <Widget>[
-                    const SizedBox(height: 30),
-                    CircleAvatar(
-                      backgroundImage: Image
-                          .network(photoUrl)
-                          .image,
-                      radius: 50,
-                    ),
-                    Text(displayName,
-                      style: const TextStyle(color: Colors.black,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          wordSpacing: 3),),
+            height: 150,
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage(
+                                    "assets/icons/ic_launcher.png"),
+                                fit: BoxFit.cover
+                            )
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Text("Car Pool",
+                          style: const TextStyle(color: Colors.black,
+                              fontSize: 20,
+                              letterSpacing: 2,
+                              fontWeight: FontWeight.bold,
+                              wordSpacing: 3),),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(10),
+                        child: Hero(
+                          tag: "myPhoto",
+                          child: CircleAvatar(
+                            radius: 23.0,
+                            backgroundColor: Colors.white,
+                            child: CircleAvatar(
+                              backgroundImage: Image
+                                  .network(photoUrl)
+                                  .image,
+                              radius: 21,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Hero(
+                            tag: "myName",
+                            child: Text(displayName,
+                              style: const TextStyle(color: Colors.white,
+                                  fontSize: 20,
+                                  letterSpacing: 1,
+                                  fontWeight: FontWeight.bold,
+                                  wordSpacing: 3),),
+                          ),
+                          Text(AppPreferences.getEmail(),
+                            style: const TextStyle(color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                wordSpacing: 1),)
 
-                  ],
+                        ],
 
-                ),
-                )
-              ],
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
           Card(
-            margin: EdgeInsets.only(left: 10,right: 10,top:1),
+            margin: EdgeInsets.only(left: 10, right: 10, top: 1),
             child: ListTile(
               leading: const Icon(Icons.person),
-              title: const Text('Travel History'),
-              onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>TravelHistoryScreen()));
+              title: const Text('History'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => TravelHistoryScreen()));
               },
             ),
           ),
 
-          Card(
-            margin: EdgeInsets.only(left: 10,right: 10,top: 1),
-            child: const ListTile(
-              leading: Icon(Icons.contact_mail),
-              title: Text('contact'),
-              onTap: null,
-            ),
-          ),
-
-
 
           Card(
-            margin: EdgeInsets.only(left: 10,right: 10,top: 1),
+            margin: EdgeInsets.only(left: 10, right: 10, top: 1),
             child: ListTile(
-              leading: const Icon(Icons.arrow_back),
-              title: const Text('Logout'),
-              onTap: (){ logout();
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const AuthenticationScreen()));},
+                leading: const Icon(Icons.arrow_back),
+                title: const Text('Logout'),
+                onTap: () {
+                  logout();
+                }
             ),
           ),
         ],
       ),
     );
-
   }
-  Future<void> logout() async {
-  await GoogleSignIn().signOut();
-  await FirebaseAuth.instance.signOut();
-  SharedPreferences preferences = await SharedPreferences.getInstance();
-  print(preferences.getString("email"));
-  print(preferences.getString("uid"));
-  print(preferences.getString("photoUrl"));
-  print(preferences.getString("displayName"));
-  print(preferences.getString("mobile_number"));
 
-  preferences.clear();
-  print(preferences.getString("email"));
-  print(preferences.getString("uid"));
-  print(preferences.getString("photoUrl"));
-  print(preferences.getString("displayName"));
-  print(preferences.getString("mobile_number"));
-}
-
+  logout() async {
+    await GoogleSignIn().signOut();
+    await FirebaseAuth.instance.signOut();
+    AppPreferences.clear();
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const AuthenticationScreen()));
+  }
 }

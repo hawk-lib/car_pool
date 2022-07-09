@@ -23,8 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
 
     // TODO: implement build
-    return  MaterialApp(
-      home: Scaffold(
+    return Scaffold(
                 backgroundColor: Colors.transparent,
                 //backgroundColor: Colors.red,
           appBar: AppBar(
@@ -131,8 +130,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           )
-        ),
-
     );
   }
 

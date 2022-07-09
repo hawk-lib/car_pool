@@ -56,6 +56,7 @@ dependencies:
   connectivity: ^3.0.6
   top_snackbar_flutter: ^2.0.0
   blurrycontainer: 1.0.2
+  sliding_up_panel: ^2.0.0+1
 
 
 
@@ -87,14 +88,9 @@ flutter:
   assets:
    - assets/icons/
    - assets/image/
-   - assets/background/Wallpaper.jpg
-   - assets/background/night.jpg
-   - assets/background/road.jpg
-   - assets/background/Road2.jpg
-   - assets/background/ship.jpeg
-   - assets/background/ballon.jpeg
-   - assets/image/register.png
-   - assets/image/carImage.png
+   - assets/background/
+   - assets/image/
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

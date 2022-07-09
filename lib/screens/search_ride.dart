@@ -1,3 +1,4 @@
+import 'package:car_pool/controllers/search_ride.dart';
 import 'package:car_pool/screens/ride_booking_screen.dart';
 import 'package:car_pool/utility/rides.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,6 +7,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchRide extends StatefulWidget {
@@ -16,314 +18,305 @@ class SearchRide extends StatefulWidget {
 }
 
 class _SearchRideState extends State<SearchRide>  {
+  final SearchRideController controller = Get.put(SearchRideController());
+
   List<Rides> list = [];
   TextEditingController sourceLoc = TextEditingController();
   TextEditingController destinationLoc = TextEditingController();
   TextEditingController dateCtl = TextEditingController();
   TextEditingController timeCtl = TextEditingController();
 
-  bool changeButton=false;
-  bool search = false;
+
   DatabaseReference db = FirebaseDatabase.instance.reference();
+
 
 
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: SafeArea(
-          child: Column(
-            children: [
-          Container(
-          width: double.infinity,
-            padding: EdgeInsets.only(top: 20,bottom: 20),
-            color: Colors.black.withOpacity(0.5),
+    return Scaffold(
+      body: AbsorbPointer(
+        absorbing: controller.isAbsorbed,
+        child: Column(
+          children: [
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.only(top: 20, bottom: 20),
+              color: Colors.lightBlue,
+              child: SafeArea(
+                child: SizedBox(
 
-          child: Column(
-            children: [
+                  child: Column(
+                    children: [
 
-              Container(
-                height: 40,
-                width: 200,
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(25)),
-                    color: Colors.white
-                ),
-                child: TextFormField(
-                  controller: sourceLoc,
-                  decoration: const InputDecoration(
-                      focusedBorder: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      errorBorder: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                      prefixIcon: Padding(padding: EdgeInsets.only(left: 2,right: 2),
-                        child: Icon(
-                          Icons.home,
-                          color: Color(0xFF00E676),
-                        )
+                      Container(
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          color: Colors.white,
+                        ),
+                        margin: EdgeInsets.symmetric(horizontal: 20),
+                        child: TextFormField(
+                          controller: sourceLoc,
+                          textInputAction: TextInputAction.next,
+                          decoration: const InputDecoration(
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(15)),
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(15)),
+                                borderSide: BorderSide(color: Colors.green),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(15)),
+                                borderSide: BorderSide(color: Colors.red),
+                              ),
+                              disabledBorder: InputBorder.none,
+                              contentPadding: EdgeInsets.all(5.0),
+                              prefixIcon: Icon(
+                                Icons.home,
+                                color: Color(0xFF00E676),
+                              ),
+                              hintText: "Source Location"
+                          ),
+                        ),
                       ),
-                      contentPadding:
-                      EdgeInsets.only(left: 5, bottom: 11, top: 11, right: 5),
-                      hintText: "source Location"
-                  ),
-                ),
-              ),
-              Container(
-                height: 40,
-                width: 200,
-                margin: const EdgeInsets.only(top: 10),
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(25)),
-                    color: Colors.white
-                ),
-                child: TextFormField(
-                  controller: destinationLoc,
-                  decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      errorBorder: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                      prefixIcon: Padding(padding: EdgeInsets.only(left: 2,right: 2),
-                          child: Icon(
-                            Icons.location_city,
-                            color: Color(0xFF00E676),
-                          )
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 5),
+                        decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                            color: Colors.white
+                        ),
+                        child: TextFormField(
+                          controller: destinationLoc,
+                          textInputAction: TextInputAction.done,
+                          decoration: const InputDecoration(
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(15)),
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(15)),
+                                borderSide: BorderSide(color: Colors.green),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(15)),
+                                borderSide: BorderSide(color: Colors.red),
+                              ),
+                              disabledBorder: InputBorder.none,
+                              contentPadding: EdgeInsets.all(5.0),
+                              prefixIcon: Icon(
+                                Icons.location_city,
+                                color: Color(0xFF00E676),
+                              ),
+                              hintText: "Destination Location"
+                          ),
+
+                        ),
                       ),
-                      contentPadding:
-                      EdgeInsets.only(left: 20, bottom: 11, top: 11, right: 15),
-                      hintText: "Destination Location"
-                  ),
-
-                ),
-              ),
 
 
-             Row(children: [
-              Container(
-                height: 40,
-                width: 200,
-                margin: EdgeInsets.only(top: 4,left: 80,right: 10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(25)),
-                    color: Colors.white
-                ),
-                child: TextFormField(
-                  controller: dateCtl,
-                  enableInteractiveSelection: false,
-                  decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      errorBorder: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                    prefixIcon: Padding(padding: EdgeInsets.only(left: 2,right: 2),
-                        child: Icon(
-                          Icons.date_range,
-                          color: Color(0xFF00E676),
-                        )
-                    ),
-                      contentPadding:
-                      EdgeInsets.only(left: 20, bottom: 11, top: 11, right: 15),
-                      hintText: "JourneyDate",
-                  ),
-                  onTap: () async {
-                    DateTime ? date = DateTime(1900);
-                    FocusScope.of(context).requestFocus(FocusNode());
-                    date = await showDatePicker(
-                        context: context,
-                        initialDate:DateTime.now(),
-                        firstDate: DateTime.now(),
-                        lastDate: DateTime(2100));
+                      Row(children: [
+                        Expanded(
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 20),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(15)),
+                                color: Colors.white
+                            ),
+                            child: TextFormField(
+                              controller: dateCtl,
+                              enableInteractiveSelection: false,
+                              decoration: const InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(15)),
+                                  borderSide: BorderSide(color: Colors.black),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(15)),
+                                  borderSide: BorderSide(color: Colors.green),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(15)),
+                                  borderSide: BorderSide(color: Colors.red),
+                                ),
+                                disabledBorder: InputBorder.none,
+                                contentPadding: EdgeInsets.all(5.0),
+                                prefixIcon: Padding(
+                                    padding: EdgeInsets.only(left: 2, right: 2),
+                                    child: Icon(
+                                      Icons.date_range,
+                                      color: Color(0xFF00E676),
+                                    )
+                                ),
 
-                    dateCtl.text = "${date?.year}-${date?.month}-${date?.day}";
-                  },
-                ),
-              ),
-               Container(
-                 margin: EdgeInsets.only(top: 10),
-                 child: ElevatedButton(
-                     style: ButtonStyle(
-                         foregroundColor: MaterialStateProperty.all<Color>(Colors.green),
-                         backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                         shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                           borderRadius: BorderRadius.circular(20),
-                         ))
-                     ),
-                            onPressed: ()
-                            async {
-                       EasyLoading.show(status: "please wait");
-                              DatabaseReference dbRef = FirebaseDatabase.instance
-                                  .ref("user_data");
+                                hintText: "JourneyDate",
+                              ),
+                              onTap: () async {
+                                DateTime ? date = DateTime(1900);
+                                FocusScope.of(context).requestFocus(
+                                    FocusNode());
+                                date = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime.now(),
+                                    lastDate: DateTime(2100));
 
-                              QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-                                  .collection("rides")
-                                  .doc(
-                                  "${sourceLoc.text.toLowerCase()}${destinationLoc
-                                      .text.toLowerCase()}")
-                                  .collection(dateCtl.text)
-                                  .get();
-                       querySnapshot.docs.forEach((doc) async {
-                         late String name;
-                         late String photoUrl;
-                         late String mobileNumber;
-                         late String email;
-                         late String time;
-                         late String price;
+                                dateCtl.text =
+                                "${date?.year}-${date?.month}-${date?.day}";
+                              },
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(right: 20),
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                                foregroundColor: MaterialStateProperty.all<
+                                    Color>(Colors.green),
+                                backgroundColor: MaterialStateProperty.all<
+                                    Color>(Colors.white),
+                                shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(40),
+                                    ))
+                            ),
+                            child: Icon(
+                                Icons.search
+                            ),
 
-                         DatabaseEvent event = await dbRef.child(doc.id)
-                             .once();
-                         name = event.snapshot
-                             .child("name")
-                             .value
-                             .toString();
-                         mobileNumber = event.snapshot
-                             .child("mobileNumber")
-                             .value
-                             .toString();
-                         email = event.snapshot
-                             .child("email")
-                             .value
-                             .toString();
-                         photoUrl = event.snapshot
-                             .child("photoUrl")
-                             .value
-                             .toString();
+                            onPressed: () async {
+                              String source = sourceLoc.text.toLowerCase();
+                              String destination = destinationLoc.text
+                                  .toLowerCase();
+                              String date = dateCtl.text;
+                              if (source.isEmpty || destination.isEmpty ||
+                                  date.isEmpty) {
 
-
-
-                         list.add(Rides(
-                           doc["Starting Point"],
-                           doc["Ending Point"],
-                           dateCtl.text,
-                           doc.id,
-                           name,
-                           photoUrl,
-                           mobileNumber,
-                           email,
-                           doc["Total Passenger"],
-                           doc["Time"],
-                           doc["Route Name"],
-                           doc["Price"],
-
-                         )
-
-                         );
-                         setState(() {
-                           EasyLoading.dismiss();
-                           search = true;
-                         });
-
-                         /*
-                      //Read data from list
-                      Rides rides = list[0];
-                      print(rides.name);
-                      print(rides.photoUrl);
-                      print(rides.time);
-                      print(list[0].name);
-                      */
-
-                       });
-
-
+                              } else {
+                                controller.source.value = source.trim();
+                                controller.destination.value =
+                                    destination.trim();
+                                controller.date.value = date;
+                                controller.list.clear();
+                                controller.aSyncData();
+                              }
                             }
 
+                            ,),
+                        )
+                      ]
+                      ),
 
-                          , child: Icon(
-                             Icons.search
-                            )),
-                            )
-                            ]
+                    ],
+
+
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Obx(() {
+                if (controller.source.value.isEmpty) {
+                  return Center(child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("The World", style: TextStyle(
+                          color: Colors.blue, fontWeight: FontWeight.w700, fontSize: 25),),
+                      Text("is waiting for YOU", style: TextStyle(
+                          color: Colors.blue, fontWeight: FontWeight.w700, fontSize: 25),),
+                      Text("Travel Safe", style: TextStyle(
+                          color: Colors.blue, fontWeight: FontWeight.w700, fontSize: 25),),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("GO!", style: TextStyle(
+                            color: Colors.green, fontWeight: FontWeight.w700, fontSize: 25),),
+                      ),
+
+
+                    ],
+                  ),);
+                } else if (controller.noData.isTrue) {
+                  return Center(child: Text(
+                    "No Data Found!", style: TextStyle(fontWeight: FontWeight
+                      .w700, fontSize: 25),),);
+                } else if (controller.list.isEmpty) {
+                  return Center(child: Text(
+                    "Loading...", style: TextStyle(fontWeight: FontWeight.w700,
+                      fontSize: 25),),);
+                } else {
+                  return Container(
+                    child: ListView.builder(
+
+                        itemCount: controller.list.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            child: ListTile(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0)),
+                              title: Hero(tag: "profileName",child: Text(controller.list[index].name)),
+                              leading: Hero(
+                                tag: "profilePic",
+                                child: CircleAvatar(
+                                  radius: 22,
+                                  backgroundColor: Colors.green,
+                                  child: CircleAvatar(
+                                    backgroundImage: Image
+                                        .network(controller.list[index].photoUrl)
+                                        .image,
+                                  ),
+                                ),
+                              ),
+                              subtitle: Text(controller.list[index].time),
+                              trailing: Text(
+                                  "Price : ${controller.list[index].price} Rs"),
+
+
+                              onTap: () {
+                                Navigator.push(context, MaterialPageRoute(
+                                    builder: (context) =>
+                                        RideBookScreen(
+                                            controller.list[index])));
+                              },
                             ),
+                          );
+                        }),
+                  );
+                }
+              }),
+            ),
 
-            ],
-
-
-          ),
-      ),
-
-
-              if (list.isNotEmpty)...[
-
-                Container(
-                  width: double.infinity,
-                  height: 300,//next day
-                  color: Colors.white,
-                  child: ListView.builder(
-
-                    itemCount: list.length,
-                      itemBuilder: (context,index){
-                        Rides rides = list[index];
-                        return Card(
-                          child: ListTile(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                            title: Text(rides.name),
-                            leading: CircleAvatar(
-                              backgroundImage: Image.network(list[index].photoUrl).image,
-                            ),
-                            subtitle: Text(rides.time),
-                            trailing: Text(rides.price),
-
-
-                            onTap: (){
-                              Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) =>  RideBookScreen(list[index])));
-                            },
-                          ),
-                        );
-                      }),
-                )
-              ]else if(search)...[
-                Text("Not Available!"),
-              ]else...[
-                     Container(
-                      color: Colors.green,
-                      height: 100,
-                        child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text("The world is waiting for you."),
-                                Text("Good Luck"),
-                                Text("Travel Safe. Go!"),
-
-
-                              ],
-                            ))
-                     ),
-
-
-              ]
-            ],
-          ),
+          ],
         ),
       ),
-
     );
   }
 
-  viewSubTitle(String id) {
-    DatabaseReference db = FirebaseDatabase.instance.reference();
-    db.child("user_data").child("name").once().then((value){
-      String val = value.snapshot.value.toString();
-      print(val);
 
-      //return Text(val);
-    });
-    db.child("user_data").child("photoUrl").once().then((value) {
-      String val = value.snapshot.value.toString();
-      print(val);
-    });
-    return Text("data");
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    controller.list.clear();
+    controller.source.value= "";
+    controller.destination.value= "";
+    controller.date.value= "";
+    if(EasyLoading.isShow){
+      EasyLoading.dismiss();
+    }
+    super.dispose();
   }
-
-  String getStartingPoint() {
-
-    Rides ride = list[0];
-    return ride.source;
-  }
-
   
   
 }
