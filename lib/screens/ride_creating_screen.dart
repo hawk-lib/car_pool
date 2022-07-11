@@ -52,6 +52,7 @@ class _RideCreateScreenState extends State<RideCreateScreen> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         height: double.infinity,
         width: double.infinity,
@@ -66,7 +67,7 @@ class _RideCreateScreenState extends State<RideCreateScreen> {
             Row(
               children: [
                 Container(
-                  height: 90,
+                  height: 110,
                   width: 20,
                   margin: EdgeInsets.only(bottom: 40),
                   decoration: const BoxDecoration(
@@ -804,7 +805,9 @@ class _RideCreateScreenState extends State<RideCreateScreen> {
                           int totalSeats = int.parse(totalYatri.text);
                           int availableSeats = int.parse(presentSeats.text);
                           if (totalSeats > availableSeats && totalSeats <= 10) {
-                            _isabsorbed = true;
+                            setState(() {
+                              _isabsorbed = true;
+                            });
                             EasyLoading.show(status: 'Saving');
                             String startLocation = strLoc.text.toLowerCase()
                                 .trim();
@@ -832,7 +835,9 @@ class _RideCreateScreenState extends State<RideCreateScreen> {
                             firestoreDB.get().then((value) async {
                               if (value.exists) {
                                 EasyLoading.dismiss();
-                                _isabsorbed = false;
+                                setState(() {
+                                  _isabsorbed = false;
+                                });
                                 snackBar("Already Exist!", Colors.red);
                               } else {
                                 firestoreDB.set(data);
@@ -858,7 +863,9 @@ class _RideCreateScreenState extends State<RideCreateScreen> {
                                   totalYatri.text = "";
                                   totalPrice.text = "";
                                   EasyLoading.dismiss();
-                                  _isabsorbed = false;
+                                  setState(() {
+                                    _isabsorbed = false;
+                                  });
                                 });
                               }
                             });

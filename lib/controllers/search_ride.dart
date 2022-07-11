@@ -14,14 +14,14 @@ class SearchRideController extends GetxController {
   RxString destination = RxString("");
   RxString date = RxString("");
   RxBool noData = RxBool(false);
-  bool isAbsorbed=false;
+  RxBool isAbsorbed=RxBool(false);
 
 
   RxList<Rides> list = RxList();
 
   aSyncData() async {
     EasyLoading.show(status: "please wait");
-    isAbsorbed = true;
+    isAbsorbed.value = true;
     String ride = "${source.value}-${destination.value}";
 
     DatabaseReference dbRef = FirebaseDatabase
@@ -36,11 +36,11 @@ class SearchRideController extends GetxController {
     if (querySnapshot.docs.isEmpty) {
       noData.value = true;
       EasyLoading.dismiss();
-      isAbsorbed = false;
+      isAbsorbed.value = false;
     }else {
       noData.value=false;
       EasyLoading.dismiss();
-      isAbsorbed = false;
+      isAbsorbed.value = false;
       Stream<QuerySnapshot> streamSnapshot = FirebaseFirestore
           .instance
           .collection("rides")

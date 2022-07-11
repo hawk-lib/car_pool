@@ -30,21 +30,50 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
           width: double.infinity,
           height: double.infinity,
           padding: EdgeInsets.only(bottom: 100),
-          alignment: Alignment.bottomCenter,
           decoration: const BoxDecoration(
             color: Colors.lightBlue,
           ),
           child: SafeArea(
-            child: FloatingActionButton.extended(onPressed: () {
-              login();
-            },
-                icon: Image.asset("assets/icons/google.png",
-                  height: 32,
-                  width: 32,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Hero(
+                  tag: "icon",
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                          height: 200,
+                          width: 200,
+                          child: Image.asset("assets/icons/ic_launcher.png")
+                      ),
+                      Text(
+                        "Car Pool",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 50,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 3,
+                          wordSpacing: 4,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                label: const Text("google sign in"),
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.black),
+
+                FloatingActionButton.extended(onPressed: () {
+                  login();
+                },
+                    icon: Image.asset("assets/icons/google.png",
+                      height: 32,
+                      width: 32,
+                    ),
+                    label: const Text("google sign in"),
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black),
+              ],
+            ),
           ),
         ),
     );

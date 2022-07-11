@@ -31,7 +31,6 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: Colors.black.withOpacity(0.4),
 
           ),
-
           drawer: NavigationDrawerWidget(),
           body: Container(
             height: double.infinity,
@@ -69,6 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.transparent,
                     ),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Container(
                           color: Colors.transparent,

@@ -36,6 +36,7 @@ class RideBookScreen extends StatefulWidget {
     @override
     Widget build(BuildContext context) {
       return Scaffold(
+        resizeToAvoidBottomInset: false,
           body: Container(
               height: double.infinity,
               width: double.infinity,
@@ -51,7 +52,7 @@ class RideBookScreen extends StatefulWidget {
                   Row(
                     children: [
                       Container(
-                        height: 90,
+                        height: 110,
                         width: 20,
                         margin: EdgeInsets.only(bottom: 40),
                         decoration: const BoxDecoration(
@@ -384,7 +385,9 @@ class RideBookScreen extends StatefulWidget {
                                     int seats = int.parse(totalSeatBook.text);
                                     if (availableSeats > 0) {
                                       if (seats <= availableSeats) {
-                                        isAbsorbed=true;
+                                        setState(() {
+                                          isAbsorbed=true;
+                                        });
                                         EasyLoading.show();
                                         var firestoreDB = await FirebaseFirestore
                                             .instance.collection("rides")
@@ -433,7 +436,9 @@ class RideBookScreen extends StatefulWidget {
                                               "Timestamp": DateTime.now()
                                             })
                                                 .then((value) {
-                                              isAbsorbed=false;
+                                                  setState(() {
+                                                    isAbsorbed=false;
+                                                  });
                                               EasyLoading.dismiss();
                                               snackBar(
                                                   "Successfully Booked!");

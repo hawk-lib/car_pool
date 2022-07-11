@@ -68,26 +68,29 @@ class SplashScreenState extends State<SplashScreen> {
         width: double.infinity,
         color: Colors.lightBlue,
         child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                  height: 150,
-                  width: 150,
-                  child: Image.asset("assets/icons/ic_launcher.png")
-              ),
-              Text(
-                "Car Pool",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 40,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 3,
-                  wordSpacing: 4,
+          child: Hero(
+            tag: "icon",
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                    height: 150,
+                    width: 150,
+                    child: Image.asset("assets/icons/ic_launcher.png")
                 ),
-              ),
-            ],
+                Text(
+                  "Car Pool",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 40,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 3,
+                    wordSpacing: 4,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
