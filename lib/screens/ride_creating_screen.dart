@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:car_pool/utility/appPreferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -255,9 +254,13 @@ class _RideCreateScreenState extends State<RideCreateScreen> {
                                           firstDate: DateTime.now(),
                                           lastDate: DateTime(2100));
 
-                                      dateCtl.text =
-                                      "${date?.year}-${date?.month}-${date
-                                          ?.day}";
+                                      if(date?.month == null){
+
+                                      }else {
+                                        dateCtl.text =
+                                        "${date?.year}-${date?.month}-${date
+                                            ?.day}";
+                                      }
                                     },
                                   ),
 
@@ -330,11 +333,16 @@ class _RideCreateScreenState extends State<RideCreateScreen> {
                                     final TimeOfDay? picked = await showTimePicker(
                                       context: context,
                                       initialTime: const TimeOfDay(
-                                          hour: 00, minute: 00),
+                                          hour: 04, minute: 00),
                                     );
-                                    time.text =
-                                    "${picked?.hour.toString()}:${picked?.minute
-                                        .toString()} ${picked?.period.name}";
+                                    if(picked?.hour.toString()==null){
+
+                                    }else {
+                                      time.text =
+                                      "${picked?.hour.toString()}:${picked
+                                          ?.minute
+                                          .toString()} ${picked?.period.name}";
+                                    }
                                   },
                                 ),
 
@@ -915,5 +923,16 @@ class _RideCreateScreenState extends State<RideCreateScreen> {
     }
     super.dispose();
   }
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    DateTime ? date = DateTime.now();
+    dateCtl.text = "${date?.year}-${date?.month}-${date?.day}";
+    time.text = "4:0 am";
+  }
+
 
 }

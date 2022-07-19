@@ -37,29 +37,19 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Hero(
-                  tag: "icon",
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Hero(
+                      tag: "icon",
+                      child: Container(
                           height: 200,
                           width: 200,
                           child: Image.asset("assets/icons/ic_launcher.png")
                       ),
-                      Text(
-                        "Car Pool",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 50,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 3,
-                          wordSpacing: 4,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
 
                 FloatingActionButton.extended(onPressed: () {

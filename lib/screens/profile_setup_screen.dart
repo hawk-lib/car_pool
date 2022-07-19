@@ -350,7 +350,6 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
         _isVerifyDisabled = false;
       });
       EasyLoading.dismiss();
-      snackBar(e.code, Colors.red);
       switch (e.code) {
         case "provider-already-linked":
           snackBar("Already linked", Colors.green);
@@ -364,8 +363,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
           snackBar("Already linked to a Another account.", Colors.red);
           break;
       // See the API reference for the full list of error codes.
-        default:
-          snackBar("Unknown error.", Colors.red);
+        /*default:
+          snackBar("Unknown error.", Colors.red);*/
       }
     }
   }

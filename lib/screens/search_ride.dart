@@ -33,6 +33,13 @@ class _SearchRideState extends State<SearchRide>  {
 
 
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    DateTime ? date = DateTime.now();
+    dateCtl.text = "${date?.year}-${date?.month}-${date?.day}";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -178,8 +185,11 @@ class _SearchRideState extends State<SearchRide>  {
                                       firstDate: DateTime.now(),
                                       lastDate: DateTime(2100));
 
-                                  dateCtl.text =
-                                  "${date?.year}-${date?.month}-${date?.day}";
+                                  if(date?.month == null){
+
+                                  }else {
+                                    dateCtl.text = "${date?.year}-${date?.month}-${date?.day}";
+                                  }
                                 },
                               ),
                             ),
@@ -202,16 +212,14 @@ class _SearchRideState extends State<SearchRide>  {
                               ),
 
                               onPressed: () async {
-                                String source = sourceLoc.text.toLowerCase();
-                                String destination = destinationLoc.text
-                                    .toLowerCase();
+                                String source = sourceLoc.text.toLowerCase().trim();
+                                String destination = destinationLoc.text.toLowerCase().trim();
                                 String date = dateCtl.text;
                                 if (source.isEmpty || destination.isEmpty || date.isEmpty) {
                                   snackBar("Enter details correctly!", Colors.red);
                                 } else {
-                                  controller.source.value = source.trim();
-                                  controller.destination.value =
-                                      destination.trim();
+                                  controller.source.value = source;
+                                  controller.destination.value = destination;
                                   controller.date.value = date;
                                   controller.list.clear();
                                   controller.aSyncData();

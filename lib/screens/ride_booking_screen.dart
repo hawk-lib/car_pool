@@ -33,6 +33,7 @@ class RideBookScreen extends StatefulWidget {
     _RideBookScreenState(this.rides);
     bool isAbsorbed = false;
 
+
     @override
     Widget build(BuildContext context) {
       return Scaffold(

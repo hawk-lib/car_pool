@@ -17,8 +17,8 @@ void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await AppPreferences.init();
-  runApp(MyApp());
   configLoading();
+  runApp(MyApp());
 }
 
 void configLoading() {
@@ -46,9 +46,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-   Timer? _timer;
+   //Timer? _timer;
 
   // This widget is the root of your application.
+/*
 
 
   @override
@@ -63,6 +64,7 @@ class _MyAppState extends State<MyApp> {
     EasyLoading.showSuccess('Use in initState');
     // EasyLoading.removeCallbacks();
   }
+*/
 
 
 

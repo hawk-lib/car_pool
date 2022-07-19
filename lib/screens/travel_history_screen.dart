@@ -92,7 +92,7 @@ class TravelHistoryScreen extends StatelessWidget {
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
                                           20.0)),
-                                  title: Hero(tag: "titleA",
+                                  title: Hero(tag: list[index].source,
                                       child: Text(list[index].source + " - " +
                                           list[index].destination,
                                         style: TextStyle(color: Colors.blue,
