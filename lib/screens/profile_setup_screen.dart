@@ -360,7 +360,12 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
           break;
         case "credential-already-in-use":
-          snackBar("Already linked to a Another account.", Colors.red);
+          setState(() {
+            _otp.text = "";
+            _isVerifyDisabled = true;
+            _isPhoneDisabled = false;
+          });
+          snackBar("Already linked to Another account.", Colors.red);
           break;
       // See the API reference for the full list of error codes.
         /*default:

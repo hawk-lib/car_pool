@@ -812,7 +812,7 @@ class _RideCreateScreenState extends State<RideCreateScreen> {
                         if (_formkey.currentState !.validate()) {
                           int totalSeats = int.parse(totalYatri.text);
                           int availableSeats = int.parse(presentSeats.text);
-                          if (totalSeats > availableSeats && totalSeats <= 10) {
+                          if (totalSeats > availableSeats && totalSeats <= 12) {
                             setState(() {
                               _isabsorbed = true;
                             });
@@ -929,10 +929,9 @@ class _RideCreateScreenState extends State<RideCreateScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    DateTime ? date = DateTime.now();
-    dateCtl.text = "${date?.year}-${date?.month}-${date?.day}";
+    DateTime date = DateTime.now();
+    dateCtl.text = "${date.year}-${date.month}-${date.day}";
     time.text = "4:0 am";
   }
-
 
 }

@@ -19,8 +19,8 @@ class AuthenticationScreen extends StatefulWidget {
 }
 
 class _AuthenticationScreenState extends State<AuthenticationScreen> {
-  @override
 
+  bool isAbsorbed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -52,16 +52,19 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                   ],
                 ),
 
-                FloatingActionButton.extended(onPressed: () {
-                  login();
-                },
-                    icon: Image.asset("assets/icons/google.png",
-                      height: 32,
-                      width: 32,
-                    ),
-                    label: const Text("google sign in"),
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black),
+                AbsorbPointer(
+                  absorbing: isAbsorbed,
+                  child: FloatingActionButton.extended(onPressed: () {
+                    login();
+                  },
+                      icon: Image.asset("assets/icons/google.png",
+                        height: 32,
+                        width: 32,
+                      ),
+                      label: const Text("google sign in"),
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black),
+                ),
               ],
             ),
           ),
@@ -70,6 +73,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
   }
 
   login() async{
+    isAbsorbed = true;
     GoogleSignInAccount result;
     GoogleSignIn googleSignIn = GoogleSignIn();
     EasyLoading.show(status: 'loading');
@@ -102,6 +106,8 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
 
       }
     }catch (error){
+      isAbsorbed = false;
+      EasyLoading.dismiss();
       snackBar(error.toString(), Colors.black);
     }
   }

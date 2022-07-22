@@ -58,7 +58,7 @@ class BookRideController extends GetxController {
         .collection("rides")
         .doc(s)
         .collection(date.value)
-        .doc(AppPreferences.getUID())
+        .doc(data.user)
         .snapshots();
     snap.listen((event) {
       price.value = '${event.get("Price")}';

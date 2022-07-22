@@ -159,10 +159,7 @@ class TravelHistoryScreen extends StatelessWidget {
                 .get(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot)
                 {
-                  if(snapshot.connectionState==ConnectionState.active){
-                    return Text("Failed to load",style: TextStyle(
-                        fontWeight: FontWeight.w600, fontSize: 20));
-                  }
+
                   if(snapshot.connectionState==ConnectionState.done){
                     if(snapshot.hasData) {
                       List<BookedHistory> list = [];

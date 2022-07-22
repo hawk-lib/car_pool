@@ -37,8 +37,8 @@ class _SearchRideState extends State<SearchRide>  {
   void initState() {
     // TODO: implement initState
     super.initState();
-    DateTime ? date = DateTime.now();
-    dateCtl.text = "${date?.year}-${date?.month}-${date?.day}";
+    DateTime date = DateTime.now();
+    dateCtl.text = "${date.year}-${date.month}-${date.day}";
   }
 
   @override
